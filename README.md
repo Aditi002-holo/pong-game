@@ -6,5 +6,6 @@
 - functions used to communicate with CSS >>
     - getComputedStyle()
     - getPropertyValue()
-    - setProperty()0
+    - setProperty()
 - Using classes
+- Changing background (hue effect!!)

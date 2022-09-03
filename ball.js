@@ -3,8 +3,8 @@ const VELOCITY = 0.00001;
 
 export default class Ball {
     constructor(ballElem) {
-        this.ballElem = ballElem
-        this.reset()
+        this.ballElem = ballElem;
+        this.reset();
     }
 
     // helper functions
@@ -30,38 +30,50 @@ export default class Ball {
     }
 
     reset() {
-        
-        this.x = 50
-        this.y = 50
-        this.direction = {x: 0, y: 0}
+        this.x = 50;
+        this.y = 50;
+        this.direction = {x: 0, y: 0};
         
 
         while(Math.abs(this.direction.x <= 0.2) || Math.abs(this.direction.x >= 0.9)) {
             // 0 to 360
-            const heading = randomNumberBetween(0, 2 * Math.PI)
-            this.direction = {x: Math.cos(heading), y: Math.sin(heading)}
+            const heading = randomNumberBetween(0, 2 * Math.PI);
+            this.direction = {x: Math.cos(heading), y: Math.sin(heading)};
         }
-        this.velocity = INITIAL_VELOCITY
+        this.velocity = INITIAL_VELOCITY;
         
     }
     
 
-    update(delta) {
-        this.x = this.x + this.direction.x * this.velocity * delta
-        this.y = this.y + this.direction.y * this.velocity * delta
-        this.velocity += VELOCITY * delta
-        const rect = this.rect()
+    update(delta,paddleRects) {
+        this.x = this.x + this.direction.x * this.velocity * delta;
+        this.y = this.y + this.direction.y * this.velocity * delta;
+        this.velocity += VELOCITY * delta;
+        const rect = this.rect();
 
         if(rect.bottom >= window.innerHeight || rect.top <= 0) {
             this.direction.y *= -1;
         }
 
-        if(rect.right >= window.innerWidth || rect.left <= 0) {
+        // if(rect.right >= window.innerWidth || rect.left <= 0) {
+        //     this.direction.x *= -1;
+        // }
+
+        if(paddleRects.some(r => isCollision(r,rect))) {
             this.direction.x *= -1;
         }
     }
 }
 
 function randomNumberBetween(min,max) {
-    return Math.random() * (max-min) + min
+    return Math.random() * (max-min) + min;
+}
+
+function isCollision(rect1,rect2) {
+    return (
+        rect1.left <=rect2.right &&
+        rect1.right >=rect2.left &&
+        rect1.top <=rect2.bottom &&
+        rect1.bottom >=rect2.top
+        )
 }
